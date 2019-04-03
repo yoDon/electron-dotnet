@@ -1,0 +1,98 @@
+{
+  "name": "electron-create-react-app-typescript-python",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "./",
+  "main": "buildMain/index.js",
+  "scripts": {
+    "lint": "npm run main-lint && npm run react-lint",
+    "start": "concurrently \"npm run react-start\" \"npm run main-start\"",
+    "watch": "concurrently \"npm run main-watch\" \"npm run react-watch\"",
+    "build": "npm run python-build && npm run react-build && npm run main-build",
+    "main-lint": "tslint -c tslint.json -p tsconfig.electronMain.json",
+    "main-start": "tsc -p tsconfig.electronMain.json && wait-on http://localhost:3000/ && cross-env NODE_ENV=development electron .",
+    "main-watch": "tsc -w -p tsconfig.electronMain.json",
+    "main-build": "tsc -p tsconfig.electronMain.json && electron-builder",
+    "react-lint": "tslint -c tslint.json -p tsconfig.json",
+    "react-start": "craco start",
+    "react-watch": "tsc -w -p tsconfig.json",
+    "react-build": "craco build",
+    "python-build": "shx rm -rf pythondist && pyinstaller python/api.py --distpath pythondist --workpath build-py-temp --onefile && shx rm -rf build-py-temp && shx rm api.spec"
+  },
+  "dependencies": {
+    "@craco/craco": "^3.5.0",
+    "@types/cross-spawn": "^6.0.0",
+    "@types/isomorphic-fetch": "0.0.35",
+    "@types/node": "^11.11.3",
+    "@types/react": "^16.8.8",
+    "@types/react-dom": "^16.8.2",
+    "@types/superagent": "^4.1.1",
+    "@types/uuid": "^3.4.4",
+    "apollo-cache-inmemory": "^1.5.1",
+    "apollo-client": "^2.5.1",
+    "apollo-link-http": "^1.5.14",
+    "cross-spawn": "^6.0.5",
+    "get-port": "^4.2.0",
+    "graphql": "^14.2.0",
+    "graphql-tag": "^2.10.1",
+    "isomorphic-fetch": "^2.2.1",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-scripts": "2.1.8",
+    "shx": "^0.3.2",
+    "superagent": "^5.0.2",
+    "typescript": "^3.3.3333",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "cross-env": "^5.2.0",
+    "electron": "4.1.0",
+    "electron-builder": "^20.39.0",
+    "source-map-support": "^0.5.11",
+    "tslint": "^5.9.1",
+    "tslint-config-standard": "^7.0.0",
+    "tslint-loader": "^3.5.3",
+    "tslint-react": "^3.4.0",
+    "wait-on": "^3.2.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "build": {
+    "appId": "com.example.electron-create-react-app-typescript-python",
+    "productName": "My Electron Python App",
+    "forceCodeSigning": false,
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "extraMetadata": {
+      "main": "buildMain/index.js"
+    },
+    "files": [
+      "node_modules/**",
+      "buildMain/**"
+    ],
+    "extraResources": [],
+    "extraFiles": [],
+    "mac": {},
+    "mas": {},
+    "dmg": {},
+    "pkg": {},
+    "win": {
+      "target": "portable"
+    },
+    "nsis": {},
+    "nsisWeb": {},
+    "portable": {},
+    "appx": {},
+    "squirrelWindows": {}
+  }
+}

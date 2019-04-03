@@ -1,0 +1,5 @@
+build
+buildMain
+dist
+node_modules
+pythondist
