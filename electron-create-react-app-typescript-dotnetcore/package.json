@@ -1,14 +1,16 @@
 {
-  "name": "electron-create-react-app-typescript-python",
+  "name": "electron-create-react-app-typescript-dotnet",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
   "main": "buildMain/index.js",
   "scripts": {
     "lint": "npm run main-lint && npm run react-lint",
-    "start": "concurrently \"npm run react-start\" \"npm run main-start\"",
+    "start": "concurrently \"npm run dotnet\" \"npm run react-start\" \"npm run main-start\"",
     "watch": "concurrently \"npm run main-watch\" \"npm run react-watch\"",
-    "build": "npm run python-build && npm run react-build && npm run main-build",
+    "build": "npm run dotnet-build && npm run react-build && npm run main-build",
+    "dotnet-build": "shx rm -rf dotnet/bin && dotnet publish dotnet/api.csproj -c release -r win10-x64 -o ../dotnet-win && dotnet publish dotnet/api.csproj -c release -r osx.10.11-x64 -o ../dotnet-osx && dotnet publish dotnet/api.csproj -c release -r ubuntu.16.10-x64 -o ../dotnet-ubuntu",
+    "dotnet-start": "dotnet run -p dotnet/api.csproj",
     "main-lint": "tslint -c tslint.json -p tsconfig.electronMain.json",
     "main-start": "tsc -p tsconfig.electronMain.json && wait-on http://localhost:3000/ && cross-env NODE_ENV=development electron .",
     "main-watch": "tsc -w -p tsconfig.electronMain.json",
@@ -16,8 +18,7 @@
     "react-lint": "tslint -c tslint.json -p tsconfig.json",
     "react-start": "craco start",
     "react-watch": "tsc -w -p tsconfig.json",
-    "react-build": "craco build",
-    "python-build": "shx rm -rf pythondist && pyinstaller python/api.py --distpath pythondist --workpath build-py-temp --onefile && shx rm -rf build-py-temp && shx rm api.spec"
+    "react-build": "craco build"
   },
   "dependencies": {
     "@craco/craco": "^3.5.0",
@@ -66,8 +67,8 @@
     "not op_mini all"
   ],
   "build": {
-    "appId": "com.example.electron-create-react-app-typescript-python",
-    "productName": "My Electron Python App",
+    "appId": "com.example.electron-create-react-app-typescript-dotnetcore",
+    "productName": "My Electron DotNet App",
     "forceCodeSigning": false,
     "directories": {
       "buildResources": "build",
@@ -76,17 +77,25 @@
     "extraMetadata": {
       "main": "buildMain/index.js"
     },
-    "files": [
-      "node_modules/**",
-      "buildMain/**"
-    ],
+    "files": [],
     "extraResources": [],
     "extraFiles": [],
-    "mac": {},
+    "mac": {
+      "files": [
+        "node_modules/**",
+        "buildMain/**",
+        "dotnet-osx/**/"
+        ]
+    },
     "mas": {},
     "dmg": {},
     "pkg": {},
     "win": {
+      "files": [
+        "node_modules/**",
+        "buildMain/**",
+        "dotnet-win/**/"
+        ],
       "target": "portable"
     },
     "nsis": {},
