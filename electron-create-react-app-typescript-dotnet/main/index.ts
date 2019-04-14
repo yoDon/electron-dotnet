@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from "electron"; // tslint:disable-line
 import * as path from "path";
-import "./with-python";
+import "./with-dotnet";
 
 const isDev = (process.env.NODE_ENV === "development");
 
@@ -20,9 +20,9 @@ app.on("ready", () => {
 
 function createWindow() {
   const win = new BrowserWindow();
+  win.webContents.openDevTools();
   if (isDev) {
     win.loadURL("http://localhost:3000/index.html");
-    win.webContents.openDevTools();
   } else {
     win.loadURL(`file://${path.join(__dirname, "/../build/index.html")}`);
   }

@@ -1,6 +1,6 @@
 # Electron + Create-React-App + Python
 
-This example builds a stand-alone Electron + Create-React-App + Python application and installer. On Windows it builds the app into `./dist/win-uppacked/My Electron Python App.exe` and the installer into `./dist/My Electron Python App Setup 1.0.0.exe` (OSX and Linux destinations are similar). You can change the name of the application by changing the `name` property in `package.json`.
+This example builds a stand-alone Electron + Create-React-App + Python application and installer. On Windows it builds the app into `./dist/win-unpacked/My Electron Python App.exe` and the installer into `./dist/My Electron Python App Setup 1.0.0.exe` (OSX and Linux destinations are similar). You can change the name of the application by changing the `name` property in `package.json`.
 
 # Installation
 

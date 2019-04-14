@@ -76,7 +76,9 @@ class App extends Component<IOwnProps> {
         .then(({ data }) => {
           this.resultDiv!.textContent = data.calc;
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log("Error contacting graphql server");
+          console.log(e);
           this.resultDiv!.textContent = "Error getting result with port=" + this.apiPort + " and signingkey='" + this.apiSigningKey + "'";
         });
     }

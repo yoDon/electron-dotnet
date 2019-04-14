@@ -61,7 +61,7 @@ public static class Calc
 
   private static bool IsDigit(char c)
   {
-    return "013456789.".Contains(c);
+    return "0123456789.".Contains(c);
   }
 
   public static double Eval(string s)

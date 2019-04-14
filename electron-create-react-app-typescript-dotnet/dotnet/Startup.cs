@@ -19,6 +19,8 @@ namespace dotnetcore
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
 
             services.AddSingleton<IDocumentExecuter, DocumentExecuter>();
@@ -29,10 +31,9 @@ namespace dotnetcore
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddGraphQL(_ =>
+            services.AddGraphQL(options =>
             {
-                _.EnableMetrics = true;
-                _.ExposeExceptions = true;
+                options.EnableMetrics = true;
             });
         }
 
@@ -43,7 +44,12 @@ namespace dotnetcore
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseGraphQL<ISchema>("/graphql");
+            app.UseCors(policy => policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin() // NOTE services will be available to any web caller
+            );
+            var graphQL = app.UseGraphQL<ISchema>("/graphql");
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions { Path = "/graphiql" });
         }
     }

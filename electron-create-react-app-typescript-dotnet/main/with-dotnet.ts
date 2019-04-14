@@ -7,13 +7,14 @@ import * as path from "path";
 import superagent from "superagent";
 import uuid from "uuid";
 
-const PY_DIST_FOLDER = "pythondist";
-const PY_FOLDER = "python";
-const PY_MODULE = "api"; // without .py suffix
+const DOTNET_SUFFIX = (process.platform === "win32") ? "win" : (process.platform === "darwin") ? "osx" : (process.platform === "linux") ? "ubuntu" : "unknown";
+const DOTNET_DIST_FOLDER = "dotnet-" + DOTNET_SUFFIX;
+const DOTNET_FOLDER = "dotnet";
+const DOTNET_BASENAME = "api";
 
 const isDev = (process.env.NODE_ENV === "development");
 
-let pyProc = null as any;
+let dotnetProc = null as any;
 
 const apiDetails = {
   port:0,
@@ -26,30 +27,44 @@ const initializeApi = async () => {
   apiDetails.port = isDev ? 5000 : availablePort;
   const key = isDev ? "devkey" : uuid.v4();
   apiDetails.signingKey = key;
-  const srcPath = path.join(__dirname, "..", PY_FOLDER, PY_MODULE + ".py");
-  const exePath = (process.platform === "win32") ? path.join(__dirname, "..", PY_DIST_FOLDER, PY_MODULE + ".exe") : path.join(__dirname, PY_DIST_FOLDER, PY_MODULE);
+
+  const srcPath = path.join(__dirname, "..", DOTNET_FOLDER, DOTNET_BASENAME + ".csproj");
+  const exePath = (process.platform === "win32") ? path.join(__dirname.replace("app.asar", "app.asar.unpacked"), "..", DOTNET_DIST_FOLDER, DOTNET_BASENAME + ".exe") : path.join(__dirname, DOTNET_DIST_FOLDER, DOTNET_BASENAME);
+
   if (__dirname.indexOf("app.asar") > 0) {
     // dialog.showErrorBox("info", "packaged");
     if (fs.existsSync(exePath)) {
-      pyProc = childProcess.execFile(exePath, ["--apiport", String(apiDetails.port), "--signingkey", apiDetails.signingKey]);
-      if (pyProc === undefined) {
-        dialog.showErrorBox("Error", "pyProc is undefined");
-      } else if (pyProc === null) {
-        dialog.showErrorBox("Error", "pyProc is null");
+      dotnetProc = childProcess.execFile(exePath, ["--apiport", String(apiDetails.port), "--signingkey", apiDetails.signingKey], {}, (error, stdout, stderr) => {
+        if (error) {
+          console.log(error);
+          console.log(stderr);
+        }
+      });
+      if (dotnetProc === undefined) {
+        dialog.showErrorBox("Error", "dotnetProc is undefined");
+      } else if (dotnetProc === null) {
+        dialog.showErrorBox("Error", "dotnetProc is null");
       }
     } else {
-      dialog.showErrorBox("Error", "Packaged python app not found");
+      dialog.showErrorBox("Error", "Packaged dotnet app not found");
     }
   } else {
     // dialog.showErrorBox("info", "unpackaged");
     if (fs.existsSync(srcPath)) {
-      pyProc = crossSpawn("python", [srcPath, "--apiport", String(apiDetails.port), "--signingkey", apiDetails.signingKey]);
+      dotnetProc = crossSpawn("dotnet", [
+        "run",
+        "-p", srcPath,
+        "--",
+        "--apiport", String(apiDetails.port),
+        "--signingkey", apiDetails.signingKey,
+      ]);
+
     } else {
-      dialog.showErrorBox("Error", "Unpackaged python source not found");
+      dialog.showErrorBox("Error", "Unpackaged dotnet source not found");
     }
   }
-  if (pyProc === null || pyProc === undefined) {
-    dialog.showErrorBox("Error", "unable to start python server");
+  if (dotnetProc === null || dotnetProc === undefined) {
+    dialog.showErrorBox("Error", "unable to start dotnet server");
   } else {
     console.log("Server running at http://127.0.0.1:" + apiDetails.port);
   }
@@ -70,14 +85,14 @@ ipcMain.on("getApiDetails", (event:Electron.Event) => {
   }
 });
 
-const exitPyProc = () => {
+const exitDotnetProc = () => {
   //
   // NOTE: killing processes in node is surprisingly tricky and a simple
   //       pyProc.kill() totally isn't enough. Instead send a message to
   //       the pyProc web server telling it to exit
   //
   superagent.get("http://127.0.0.1:" + apiDetails.port + "/graphql/?query=%7Bexit(signingkey:\"" + apiDetails.signingKey + "\")%7D").then().catch();
-  pyProc = null;
+  dotnetProc = null;
 };
 
-app.on("will-quit", exitPyProc);
+app.on("will-quit", exitDotnetProc);
