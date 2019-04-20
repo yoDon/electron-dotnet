@@ -49,7 +49,7 @@ namespace dotnetcore
                 .AllowAnyMethod()
                 .AllowAnyOrigin() // NOTE services will be available to any web caller
             );
-            var graphQL = app.UseGraphQL<ISchema>("/graphql");
+            app.UseGraphQL<ISchema>("/graphql");
             app.UseGraphQLPlayground(new GraphQLPlaygroundOptions { Path = "/graphiql" });
         }
     }

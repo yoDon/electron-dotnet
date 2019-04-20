@@ -51,7 +51,11 @@ npm run build # must be run in the same shell you just conda activated
 
 # Debugging Python server
 
-To test the Python GraphQL server, in a conda activated terminal window run `npm run build-python`, cd into the newly generated `pythondist` folder, and run `api.exe --apiport 5000 --signingkey devkey` then browse to `http://127.0.0.1:5000/graphql/` to access a GraphiQL view of the server. For a more detailed example, try `http://127.0.0.1:5000/graphql/?query={calc(math:"1/2",signingkey:"devkey")}` which works great if you copy and paste into the browser but which is a complex enough URL that it will confuse chrome if you try to click directly on it.
+To test the Python GraphQL server, in a conda activated terminal window run `npm run build-python`, cd into the newly generated `pythondist` folder, and run `api.exe --apiport 5000 --signingkey devkey` then browse to `http://127.0.0.1:5000/graphiql/` to access a GraphiQL view of the server. For a more detailed example, try `http://127.0.0.1:5000/graphiql/?query={calc(math:"1/2",signingkey:"devkey")}` which works great if you copy and paste into the browser but which is a complex enough URL that it will confuse chrome if you try to click directly on it.
+
+# Other great boilerplates
+
+This package is focused on using TypeScript and Create React App with Electron. If you're looking for Next.js rather than Create React App or if you're looking for JavaScript and Create React App, check out https://github.com/saltyshiomix/nextron or https://github.com/neutrinog/react-app-electron-template, respectively.
 
 # Notes
 

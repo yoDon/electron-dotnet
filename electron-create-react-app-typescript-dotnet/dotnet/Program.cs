@@ -24,6 +24,7 @@ namespace dotnetcore
                     Environment.Exit(1);
                 }
                 var apiPort = optionApiPort.HasValue() ? Int32.Parse(optionApiPort.Value()) : 5000;
+                CalcQuery.IsDevMode = (apiPort == 5000);
                 CalcQuery.SigningKey = signingKey;
                 var directory = Directory.GetCurrentDirectory();
                 var host = new WebHostBuilder()

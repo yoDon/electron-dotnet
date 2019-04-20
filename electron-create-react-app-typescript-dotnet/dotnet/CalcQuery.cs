@@ -4,6 +4,7 @@ using System;
 public class CalcQuery : ObjectGraphType
 {
     public static string SigningKey { get; set; }
+    public static bool IsDevMode { get; set; }
 
     public CalcQuery()
     {
@@ -21,7 +22,7 @@ public class CalcQuery : ObjectGraphType
                 var signingkey = context.GetArgument<string>("signingkey");
                 if (signingkey != SigningKey)
                 {
-                    return "error";
+                    return "invalid signature";
                 }
                 Environment.Exit(0);
                 return "exit";
@@ -37,7 +38,7 @@ public class CalcQuery : ObjectGraphType
                 var signingkey = context.GetArgument<string>("signingkey");
                 if (signingkey != SigningKey)
                 {
-                    return "error";
+                    return "invalid signature";
                 }
                 return "world";
             }
@@ -53,7 +54,7 @@ public class CalcQuery : ObjectGraphType
                 var signingkey = context.GetArgument<string>("signingkey");
                 if (signingkey != SigningKey)
                 {
-                    return "error";
+                    return "invalid signature";
                 }
                 var math = context.GetArgument<string>("math");
                 var result = Calc.Eval(math);
