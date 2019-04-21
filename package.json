@@ -1,5 +1,5 @@
 {
-  "name": "electron-react-typescript-dotnet",
+  "name": "electron-dotnet",
   "version": "0.1.0",
   "private": true,
   "homepage": "./",
@@ -67,7 +67,7 @@
     "not op_mini all"
   ],
   "build": {
-    "appId": "com.example.electron-react-typescript-dotnet",
+    "appId": "com.example.electron-dotnet",
     "productName": "My Electron DotNet App",
     "forceCodeSigning": false,
     "directories": {
