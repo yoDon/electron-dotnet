@@ -2,10 +2,6 @@
 
 This example builds a stand-alone Electron + Create-React-App + dotnet application and installer. On Windows it builds the app into `./dist/win-unpacked/My Electron Python App.exe` and the installer into `./dist/My Electron DotNet App Setup 1.0.0.exe` (OSX and Linux destinations are similar). You can change the name of the application by changing the `name` property in `package.json`.
 
-# Other great Electron React boilerplates
-
-This package is focused on using TypeScript and Create React App with Electron. If you're looking for Electron with Next.js rather than Create React App or if you're looking for Electron and Create React App with Javascript, check out https://github.com/saltyshiomix/nextron or https://github.com/neutrinog/react-app-electron-template, respectively.
-
 # Installation
 
 ```bash
