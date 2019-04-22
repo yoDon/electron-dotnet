@@ -86,8 +86,8 @@
         "node_modules/**",
         "buildMain/**",
         "dotnet-osx/**"
-        ],
-        "target": "dmg"
+      ],
+      "target": "dmg"
     },
     "mas": {},
     "dmg": {},
@@ -98,7 +98,7 @@
         "node_modules/**",
         "buildMain/**",
         "dotnet-win/**"
-        ],
+      ],
       "target": "nsis"
     },
     "nsis": {},
