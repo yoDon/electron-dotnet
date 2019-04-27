@@ -1,12 +1,15 @@
 import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
-import electron from "electron"; // tslint:disable-line
 import gql from "graphql-tag";
 import fetch from "isomorphic-fetch";
 import React, { Component } from "react";
 import "./App.css";
 import logo from "./logo.svg";
+
+const ipcRenderer = (window as any).isInElectronRenderer
+    ? (window as any).nodeRequire("electron").ipcRenderer
+    : (window as any).ipcRendererStub;
 
 interface IOwnProps {} // tslint:disable-line
 
@@ -21,8 +24,8 @@ class App extends Component<IOwnProps> {
 
   constructor(props:IOwnProps) {
     super(props);
-    if (electron && electron.ipcRenderer) {
-      electron.ipcRenderer.on("apiDetails", ({}, argString:string) => {
+    if (ipcRenderer) {
+      ipcRenderer.on("apiDetails", ({}, argString:string) => {
         const arg:{ port:number, signingKey:string } = JSON.parse(argString);
         this.apiPort = arg.port;
         this.apiSigningKey = arg.signingKey;
@@ -34,7 +37,7 @@ class App extends Component<IOwnProps> {
           }),
         });
       });
-      electron.ipcRenderer.send("getApiDetails");
+      ipcRenderer.send("getApiDetails");
     }
   }
 
@@ -64,6 +67,10 @@ class App extends Component<IOwnProps> {
   private handleKeyDown = (event:React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       const math = event.currentTarget.value;
+      if (ipcRenderer === null || ipcRenderer === undefined || this.appGlobalClient === null) {
+        this.resultDiv!.textContent = "this page only works when hosted in electron";
+        return;
+      }
       this.appGlobalClient.query({
         query:gql`query calc($signingkey:String!, $math:String!) {
           calc(signingkey:$signingkey, math:$math)
