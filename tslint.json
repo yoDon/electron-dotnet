@@ -1,43 +1,43 @@
 {
-  "extends": [
-    "tslint-config-standard",
-    "tslint:latest", 
-    "tslint-react"
-  ],
-  "rules": {
-    "no-console": false,
-    "indent": [true, "spaces"],
-    "max-line-length": false,
-    "space-before-function-paren": false,
-    "ter-indent": [true, 2],
-    "whitespace": [
-      true,
-      "check-branch",
-      "check-decl",
-      "check-operator",
-      "check-module",
-      "check-separator",
-      "check-rest-spread",
-      "check-typecast",
-      "check-type-operator",
-      "check-preblock"
+    "extends": [
+        "tslint-config-standard",
+        "tslint:latest", 
+        "tslint-react"
     ],
-    "typedef-whitespace": [
-      true,
-      {
-        "call-signature": "nospace",
-        "index-signature": "nospace",
-        "parameter": "nospace",
-        "property-declaration": "nospace",
-        "variable-declaration": "nospace"
-      },
-      {
-        "call-signature": "nospace",
-        "index-signature": "nospace",
-        "parameter": "nospace",
-        "property-declaration": "nospace",
-        "variable-declaration": "nospace"
-      }
-    ]
-  }
+    "rules": {
+        "no-console": false,
+        "indent": [true, "spaces"],
+        "max-line-length": false,
+        "space-before-function-paren": false,
+        "ter-indent": [true, 4],
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-module",
+            "check-separator",
+            "check-rest-spread",
+            "check-typecast",
+            "check-type-operator",
+            "check-preblock"
+        ],
+        "typedef-whitespace": [
+            true,
+            {
+                "call-signature": "nospace",
+                "index-signature": "nospace",
+                "parameter": "nospace",
+                "property-declaration": "nospace",
+                "variable-declaration": "nospace"
+            },
+            {
+                "call-signature": "nospace",
+                "index-signature": "nospace",
+                "parameter": "nospace",
+                "property-declaration": "nospace",
+                "variable-declaration": "nospace"
+            }
+        ]
+    }
 }
