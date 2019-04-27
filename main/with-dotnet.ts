@@ -1,6 +1,6 @@
 import childProcess from "child_process";
 import crossSpawn from "cross-spawn";
-import { app, dialog, ipcMain } from "electron"; // tslint:disable-line
+import Electron, { app, dialog, ipcMain } from "electron"; // tslint:disable-line
 import fs from "fs";
 import getPort from "get-port";
 import * as path from "path";
