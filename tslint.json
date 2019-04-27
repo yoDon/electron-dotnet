@@ -38,10 +38,6 @@
         "property-declaration": "nospace",
         "variable-declaration": "nospace"
       }
-    ],
-    "no-submodule-imports": [
-      true, 
-      "react-electron-web-view"
     ]
   }
 }
