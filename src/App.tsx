@@ -1,9 +1,9 @@
-import { InMemoryCache, NormalizedCacheObject } from "apollo-cache-inmemory";
+import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloClient } from "apollo-client";
 import { HttpLink } from "apollo-link-http";
 import gql from "graphql-tag";
 import fetch from "isomorphic-fetch";
-import React, { Component } from "react";
+import React, { useMemo, useState } from "react";
 import "./App.css";
 import logo from "./logo.svg";
 
@@ -11,85 +11,81 @@ const ipcRenderer = (window as any).isInElectronRenderer
         ? (window as any).nodeRequire("electron").ipcRenderer
         : (window as any).ipcRendererStub;
 
-interface IOwnProps {} // tslint:disable-line
+const App = () => {
+    const [mathResult, setMathResult] = useState("");
+    const [apiPort, setApiPort] = useState(0);
+    const [apiSigningKey, setApiSigningKey] = useState("");
 
-class App extends Component<IOwnProps> {
-
-    public resultDiv:HTMLDivElement | null = null;
-
-    private apiPort = 5000;
-    private apiSigningKey = "";
-
-    private appGlobalClient = null as unknown as ApolloClient<NormalizedCacheObject>;
-
-    constructor(props:IOwnProps) {
-        super(props);
-        if (ipcRenderer) {
-            ipcRenderer.on("apiDetails", ({}, argString:string) => {
-                const arg:{ port:number, signingKey:string } = JSON.parse(argString);
-                this.apiPort = arg.port;
-                this.apiSigningKey = arg.signingKey;
-                this.appGlobalClient = new ApolloClient({
-                    cache: new InMemoryCache(),
-                    link: new HttpLink({
-                        fetch:(fetch as any),
-                        uri: "http://127.0.0.1:" + this.apiPort + "/graphql/",
-                    }),
+    const appGlobalClient = useMemo(() => {
+        if (apiPort === 0) {
+            if (ipcRenderer) {
+                ipcRenderer.on("apiDetails", ({}, argString:string) => {
+                    const arg:{ port:number, signingKey:string } = JSON.parse(argString);
+                    setApiPort(arg.port); // setting apiPort causes useMemo'd appGlobalClient to be re-evaluated
+                    setApiSigningKey(arg.signingKey);
                 });
-            });
-            ipcRenderer.send("getApiDetails");
+                ipcRenderer.send("getApiDetails");
+            }
+            return null;
         }
-    }
+        return new ApolloClient({
+            cache: new InMemoryCache(),
+            link: new HttpLink({
+                fetch:(fetch as any),
+                uri: "http://127.0.0.1:" + apiPort + "/graphql/",
+            }),
+        });
+    }, [apiPort]);
 
-    public render() {
-        return (
-            <div className="App">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    <p>
-                        Edit <code>src/App.tsx</code> and save to reload.
-                    </p>
-                    <p>Input something like <code>1 + 1</code>.</p>
-                    <p>
-                        This calculator supports <code>+-*/^()</code>,
-                        whitespaces, and integers and floating numbers.
-                    </p>
-                    <input
-                        style={{ color:"black" }}
-                        onKeyDown={this.handleKeyDown}
-                    />
-                    <div ref={(elem) => this.resultDiv = elem}/>
-                </header>
-            </div>
-        );
-    }
-
-    private handleKeyDown = (event:React.KeyboardEvent<HTMLInputElement>) => {
+    const handleKeyDown = (event:React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
             const math = event.currentTarget.value;
-            if (ipcRenderer === null || ipcRenderer === undefined || this.appGlobalClient === null) { // tslint:disable-line
-                this.resultDiv!.textContent = "this page only works when hosted in electron";
+            if (appGlobalClient === null) {
+                setMathResult("this page only works when hosted in electron");
                 return;
             }
-            this.appGlobalClient.query({
+            appGlobalClient.query({
                 query:gql`query calc($signingkey:String!, $math:String!) {
                     calc(signingkey:$signingkey, math:$math)
                 }`,
                 variables: {
                     math,
-                    signingkey: this.apiSigningKey,
+                    signingkey: apiSigningKey,
                 },
             })
-                .then(({ data }) => {
-                    this.resultDiv!.textContent = data.calc;
-                })
-                .catch((e) => {
-                    console.log("Error contacting graphql server");
-                    console.log(e);
-                    this.resultDiv!.textContent = "Error getting result with port=" + this.apiPort + " and signingkey='" + this.apiSigningKey + "'";
-                });
+            .then(({ data }) => {
+                setMathResult(data.calc);
+            })
+            .catch((e) => {
+                console.log("Error contacting graphql server");
+                console.log(e);
+                setMathResult("Error getting result with port=" + apiPort + " and signingkey='" + apiSigningKey + " (if this is the first call, the server may need a few seconds to initialize)");
+            });
         }
-    }
-}
+    };
+
+    return (
+        <div className="App">
+            <header className="App-header">
+                <img src={logo} className="App-logo" alt="logo"/>
+                <p>
+                    Edit <code>src/App.tsx</code> and save to reload.
+                </p>
+                <p>Input something like <code>1 + 1</code>.</p>
+                <p>
+                    This calculator supports <code>+-*/^()</code>,
+                    whitespaces, and integers and floating numbers.
+                </p>
+                <input
+                    style={{ color:"black" }}
+                    onKeyDown={handleKeyDown}
+                />
+                <div>
+                    {mathResult}
+                </div>
+            </header>
+        </div>
+    );
+};
 
 export default App;
