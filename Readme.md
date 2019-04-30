@@ -1,4 +1,8 @@
-# Electron + Create-React-App + dotnet
+# Electron + C# dotnet
+
+This sample shows how to build C# dotnet apps that run in Electron. I'm using it to combine .NET backends with React frontends but if you prefer to use Razor or Blazor or some other aspnet core based frontend tech that should be a very simple thing to add. The Electron main (backend) process spawns a dotnet core webserver and provides a randomly generated authentication token to both the webserver and the Electron renderer (frontend) process for use in authenticating messages sent between the frontend and the webserver. 
+
+The webserver currently exposes a GraphQL endpoint for the frontend to interact with but the backend is just a plain old dotnet exe so you can tweak it to host whatever sort of Razor, Blazor, MVC, REST, WebApi, or other dotnet web services as might be needed by your application. The React frontend part of the sample is similarly based on a stock create-react-app site, so it should be easy to customize as needed. The only significant embelishments to the stock cra app are (1) the bare minimal amount of https://github.com/sharegate/craco to support hooking into electron without needing to eject the create react app and (2) typescript support, which you don't have to use but if you're a C# developer you're almost certainly going to want sooner or later.
 
 This example builds a stand-alone Electron + Create-React-App + dotnet application and installer. On Windows it builds the app into `./dist/win-unpacked/My Electron DotNet App.exe` and the installer into `./dist/My Electron DotNet App Setup 1.0.0.exe` (OSX and Linux destinations are similar). You can change the name of the application by changing the `name` property in `package.json`.
 
