@@ -59,7 +59,7 @@ const App = () => {
             .catch((e) => {
                 console.log("Error contacting graphql server");
                 console.log(e);
-                setMathResult("Error getting result with port=" + apiPort + " and signingkey='" + apiSigningKey + " (if this is the first call, the server may need a few seconds to initialize)");
+                setMathResult("Error getting result with port=" + apiPort + " and signingkey='" + apiSigningKey + "' (if this is the first call, the server may need a few seconds to initialize)");
             });
         }
     };
