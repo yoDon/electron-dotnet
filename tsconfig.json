@@ -19,9 +19,9 @@
         "target": "es5",
 
         "module": "esnext",
-        "noEmit": true,
+        "noEmit": true
     },
     "include": [
         "src"
-    ],
+    ]
 }
