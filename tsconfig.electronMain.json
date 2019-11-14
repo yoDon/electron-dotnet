@@ -27,6 +27,6 @@
         "sourceMap": true
     },
     "include": [
-        "main",
+        "main"
     ]
 }
