@@ -48,7 +48,7 @@
     "devDependencies": {
         "concurrently": "^4.1.0",
         "cross-env": "^5.2.0",
-        "electron": "4.1.0",
+        "electron": "7.2.4",
         "electron-builder": "^20.39.0",
         "source-map-support": "^0.5.11",
         "tslint": "^5.9.1",
